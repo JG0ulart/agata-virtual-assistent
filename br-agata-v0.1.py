@@ -94,6 +94,14 @@ class VirtualAssist():
             webbrowser.get().open(url)
             self.engine_speak("Aqui esta o que encontrei sobre " + search_term + ' no youtube')
             
+    
+        if self.theres_exist(['acessar onu', 'onu', 'roteador']):
+            keyboard.write('telecomadmin')
+            keyboard.press('tab')
+            keyboard.write('admintelecom')
+            keyboard.press('tab')
+            keyboard.press('enter')
+            
             
 assistent = VirtualAssist('Agata', 'Joao')
 
