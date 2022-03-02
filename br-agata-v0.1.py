@@ -6,6 +6,9 @@ import random
 import webbrowser
 import pyttsx3
 import os
+from time import sleep
+import keyboard
+
 
 
 class VirtualAssist():
@@ -35,13 +38,13 @@ class VirtualAssist():
             audio = self.r.listen(source, 5, 5) #Get audio data
             print('Looking at the data base')
             try:
-                self.voice_data = self.r.recognize_google(audio) #Convert audio to text
+                self.voice_data = self.r.recognize_google(audio, language="pt-BR") #Convert audio to text
                 
             except sr.UnknownValueError:
-                self.engine_speak('Sorry Boss, I did not get what you said. Can you please repeat?')
+                self.engine_speak('Desculpe, não entendi. Poderia repetir por favor?')
                 
             except sr.RequestError:
-                self.engine_speak('Sorry Boss, my server is down') # recognizer is not connected
+                self.engine_speak('Desculpe chefe, estou offline.') # recognizer is not connected
                 
             print(">>", self.voice_data.lower()) # print what you said
             self.voice_data = self.voice_data.lower()
@@ -50,7 +53,7 @@ class VirtualAssist():
         
     def engine_speak(self, audio_strig):
         audio_strig = str(audio_strig)
-        tts = gTTS(text=audio_strig, lang='en')
+        tts = gTTS(text=audio_strig, lang='pt-br')
         r = random.randint(1,20000)
         audio_file =  'audio'+ str(r)+'.mp3'
         tts.save(audio_file)
@@ -78,30 +81,30 @@ class VirtualAssist():
             self.engine_speak(greet)
           
         #google    
-        if self.theres_exist(['find for']) and 'youtube' not in voice_data:
-            search_term = voice_data.split("for")[-1]
+        if self.theres_exist(['pesquise por']) and 'youtube' not in voice_data:
+            search_term = voice_data.split("por")[-1]
             url = "http://google.com/search?q=" + search_term
             webbrowser.get().open(url)
-            self.engine_speak("here is what I found for" + search_term + ' on google')
+            self.engine_speak("Aqui esta o que encontrei sobre" + search_term + ' no google')
             
         #youtube
-        if self.theres_exist(["find youtube for"]):
-            search_term = voice_data.split("for")[-1]
+        if self.theres_exist(["pesquise no youtube por"]):
+            search_term = voice_data.split("por")[-1]
             url = "http://www.youtube.com/results?search_query=" + search_term
             webbrowser.get().open(url)
-            self.engine_speak("here is what I found for" + search_term + 'on youtube')
-            
-            
+            self.engine_speak("Aqui esta o que encontrei sobre " + search_term + ' no youtube')
             
             
 assistent = VirtualAssist('Agata', 'Joao')
 
 while True:
-    
-    voice_data = assistent.record_audio('listening...')
-    assistent.respond(voice_data)
-    
-    if assistent.theres_exist(['bye', 'goodbye', 'seeyou', 'see you later', 'see you', "it's only for today"]):
-        assistent.engine_speak("Have a nice day! Good bye!")
-        break
+    sleep(0.5)
+    if keyboard.is_pressed('ctrl+alt+m'):
+        voice_data = assistent.record_audio('Ouvindo...')
+        assistent.respond(voice_data)
+        
+        if assistent.theres_exist(['bye', 'goodbye', 'seeyou', 'obrigado', 'see you', "it's only for today"]):
+            assistent.engine_speak("Até a próxima, chefe!")
+            break
+    sleep(0.5)
             
